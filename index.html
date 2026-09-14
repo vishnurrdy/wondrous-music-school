@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wondrous Music School | Learn. Play. Perform.</title>
+<meta name="description" content="Wondrous Music School — shaping musicians and inspiring futures. Admissions open for 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0757b7;--blue2:#0b7be8;--navy:#06244d;--ink:#10233f;--muted:#60718a;--soft:#eef7ff;--line:#d9e6f4;--white:#fff;--gold:#e6b85c}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;line-height:1.6}
+a{text-decoration:none;color:inherit}
+img{display:block;width:100%;object-fit:cover}
+.container{width:min(1160px,92%);margin:auto}
+.topbar{background:var(--navy);color:#dcecff;font-size:13px;padding:8px 0}
+.topbar .container{display:flex;justify-content:space-between;gap:15px}
+nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e8eef6}
+.nav-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:54px;height:54px;border-radius:50%;display:block;overflow:hidden;background:#07131d;box-shadow:0 7px 20px #0757b72b;border:1px solid #1bbcf0}.logo img{width:100%;height:100%;object-fit:cover;display:block}
+.brand strong{display:block;font-family:"Playfair Display",serif;font-size:19px;line-height:1}
+.brand small{font-size:10px;letter-spacing:2px;color:var(--blue);font-weight:700}
+.navlinks{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:600}
+.navlinks a:hover{color:var(--blue)}
+.cta{background:var(--blue);color:#fff!important;padding:12px 19px;border-radius:7px;box-shadow:0 10px 24px #0757b733}
+.menu{display:none;border:0;background:none;font-size:28px;color:var(--navy)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#061f44 0%,#0757b7 58%,#19a4e8 100%);color:#fff}
+.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 35%,#ffffff26,transparent 28%),linear-gradient(90deg,#041a38aa,transparent 65%);pointer-events:none}
+.hero-grid{min-height:650px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:50px;position:relative;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;background:#ffffff16;border:1px solid #ffffff35;border-radius:999px;padding:7px 13px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase}
+.eyebrow b{color:#bde8ff}
+h1{font-family:"Playfair Display",serif;font-size:clamp(44px,6vw,76px);line-height:1.02;margin:20px 0 18px;letter-spacing:-2px}
+.hero p{font-size:18px;max-width:600px;color:#e7f4ff}
+.hero-actions{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:7px;font-weight:700;border:1px solid transparent;transition:.2s}
+.btn-primary{background:#fff;color:var(--blue)}
+.btn-outline{border-color:#ffffff70;color:#fff;background:#ffffff0b}
+.btn:hover{transform:translateY(-2px)}
+.hero-card{position:relative}
+.hero-img{height:500px;border-radius:22px;box-shadow:0 30px 70px #00132e70;border:1px solid #ffffff38}
+.hero-badge{position:absolute;bottom:24px;left:-22px;background:#fff;color:var(--ink);padding:17px 20px;border-radius:12px;box-shadow:0 20px 45px #00132e40}
+.hero-badge strong{display:block;color:var(--blue);font-size:22px}
+section{padding:92px 0}
+.section-head{max-width:720px;margin-bottom:42px}
+.kicker{color:var(--blue);font-size:12px;text-transform:uppercase;letter-spacing:2px;font-weight:800}
+h2{font-family:"Playfair Display",serif;font-size:clamp(32px,4vw,48px);line-height:1.1;margin:9px 0 14px;color:var(--navy)}
+.section-head p{color:var(--muted)}
+.about{background:var(--soft)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-photo{height:470px;border-radius:18px;box-shadow:0 20px 50px #164e8020}
+.about-copy p{color:var(--muted);margin:13px 0}
+.motto{margin-top:24px;padding:20px 22px;border-left:4px solid var(--blue);background:#fff;border-radius:0 10px 10px 0;font-family:"Playfair Display",serif;font-size:20px;color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:25px}
+.stat{background:#fff;border:1px solid var(--line);padding:17px;border-radius:10px}
+.stat strong{font-size:24px;color:var(--blue);display:block}.stat span{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;transition:.25s;box-shadow:0 8px 30px #0a3c7010}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px #0a3c7020}
+.card img{height:170px}.card-body{padding:18px}.card h3{font-size:18px;color:var(--navy)}.card p{font-size:13px;color:var(--muted);margin-top:5px}
+.features{background:var(--navy);color:#fff}.features h2{color:#fff}.features .section-head p{color:#bdd0e8}
+.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+.feature{padding:26px;border:1px solid #ffffff1e;background:#ffffff09;border-radius:14px}
+.icon{width:45px;height:45px;border-radius:10px;background:#1b82df;color:#fff;display:grid;place-items:center;font-size:21px;margin-bottom:20px}
+.feature h3{font-size:18px;margin-bottom:7px}.feature p{font-size:14px;color:#bed0e6}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.list{display:grid;gap:13px;margin-top:22px}.list div{display:flex;gap:12px;align-items:flex-start}.check{color:var(--blue);font-weight:900}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}.level{padding:23px;border:1px solid var(--line);border-radius:12px}.level strong{color:var(--blue);font-size:12px;letter-spacing:1.5px}.level h3{margin:6px 0;color:var(--navy)}
+.admission{background:linear-gradient(135deg,#edf7ff,#fff);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.admission-box{display:grid;grid-template-columns:1fr .8fr;gap:40px;align-items:center}
+.admission-art{background:var(--blue);color:#fff;border-radius:20px;padding:36px;min-height:280px;display:flex;flex-direction:column;justify-content:center}
+.admission-art .year{font-size:72px;font-family:"Playfair Display",serif;font-weight:800;line-height:1}
+.gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-auto-rows:190px;gap:14px}
+.gallery img{height:100%;border-radius:13px}.moments-gallery{grid-template-columns:1fr 1fr;grid-auto-rows:360px}.moments-gallery img{object-fit:cover;min-width:0}.gallery img:first-child{grid-row:span 2}.gallery img:nth-child(4){grid-column:span 2}
+.contact{background:var(--soft)}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px}
+.contact-info{display:grid;gap:15px}.contact-item{background:#fff;border:1px solid var(--line);padding:18px;border-radius:11px}.contact-item b{display:block;color:var(--navy);margin-bottom:4px}.contact-item span{color:var(--muted);font-size:14px}
+form{background:#fff;border:1px solid var(--line);padding:28px;border-radius:16px;box-shadow:0 15px 40px #0a3c7010}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:700;color:var(--navy)}.field input,.field select,.field textarea{width:100%;border:1px solid #cfdeee;border-radius:7px;padding:12px 13px;font:inherit;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #0757b713}.field textarea{min-height:110px;resize:vertical}
+footer{background:#041a38;color:#bcd0e7;padding:35px 0}.footer-grid{display:flex;justify-content:space-between;gap:30px;align-items:center}.footer-brand{color:#fff;font-family:"Playfair Display",serif;font-size:22px}.copyright{font-size:12px}
+.notice{position:fixed;right:20px;bottom:20px;background:var(--navy);color:#fff;padding:13px 17px;border-radius:9px;box-shadow:0 15px 40px #0004;display:none;z-index:100;font-size:13px}
+@media(max-width:950px){.navlinks{display:none;position:absolute;left:0;right:0;top:78px;background:#fff;padding:18px 4%;flex-direction:column;align-items:flex-start;border-bottom:1px solid var(--line)}.navlinks.open{display:flex}.menu{display:block}.hero-grid,.about-grid,.split,.admission-box,.contact-grid{grid-template-columns:1fr}.hero-grid{padding:70px 0}.hero-img{height:390px}.hero-badge{left:12px}.cards{grid-template-columns:repeat(2,1fr)}.feature-grid{grid-template-columns:repeat(2,1fr)}.levels{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr;grid-auto-rows:170px}.gallery img:first-child{grid-row:span 1}.gallery img:nth-child(4){grid-column:span 1}}
+@media(max-width:580px){.moments-gallery{grid-template-columns:1fr;grid-auto-rows:320px}.topbar .container{flex-direction:column}.nav-inner{height:68px}.navlinks{top:68px}.hero-grid{min-height:auto}.hero-img{height:320px}.hero-badge{bottom:12px}.cards,.feature-grid,.stats,.form-grid,.gallery{grid-template-columns:1fr}.gallery img{height:230px}.gallery img:nth-child(4){grid-column:auto}.gallery img:first-child{grid-row:auto}section{padding:68px 0}h1{font-size:47px}.footer-grid{flex-direction:column;align-items:flex-start}}
+
+.page5-feature{width:100%;height:auto;max-height:470px;object-fit:contain;object-position:center;border-radius:18px;display:block;background:#f4f8fc;border:1px solid var(--line)}
+.lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(2,10,24,.92)}
+.lightbox.open{display:flex}
+.lightbox img{width:auto;max-width:94vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.lightbox-close{position:absolute;top:18px;right:22px;width:44px;height:44px;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:28px;line-height:1;cursor:pointer}
+.moment-thumb{cursor:zoom-in}
+@media(max-width:580px){.lightbox{padding:12px}.lightbox img{max-width:96vw;max-height:82vh}.lightbox-close{top:10px;right:10px}}
+
+.social-link,.footer-social a{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:700;transition:opacity .2s ease}.social-link:hover,.footer-social a:hover{opacity:.75}</style>
+</head>
+<body>
+<div class="topbar"><div class="container"><span>Wondrous Music School · Estd. 2024</span><span>Admissions Open for 2026</span></div></div>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="#home"><div class="logo"><img src="assets/wondrous-logo.png" alt="Wondrous Music School logo"></div><div><strong>WONDROUS</strong><small>MUSIC SCHOOL</small></div></a>
+    <button class="menu" aria-label="Open menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
+    <div class="navlinks">
+      <a href="#home">Home</a><a href="#about">About</a><a href="#courses">Courses</a><a href="#facilities">Facilities</a><a href="#gallery">Gallery</a><a href="#admissions">Admissions</a><a href="#contact">Contact</a>
+      <a class="cta" href="#contact">Enquire Now</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">ESTABLISHED 2024 · <b>ADMISSIONS 2026</b></span>
+      <h1>Shaping Musicians.<br><span style="color:#8bd9ff">Inspiring Futures.</span></h1>
+      <p>A focused, practical music-learning environment where students learn their instrument, build confidence and discover the joy of performance.</p>
+      <div class="hero-actions"><a class="btn btn-primary" href="#admissions">Start Your Musical Journey</a><a class="btn btn-outline" href="#courses">Explore Courses</a></div>
+    </div>
+    <div class="hero-card">
+      <img class="hero-img" src="assets/school-1.jpeg" alt="Wondrous Music School">
+      <div class="hero-badge"><strong>Learn · Play · Perform.</strong><span>Music education with purpose.</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="about" class="about">
+<div class="container about-grid">
+  <img class="about-photo" src="assets/school-2.jpeg" alt="Music learning at Wondrous Music School">
+  <div class="about-copy">
+    <div class="kicker">About Wondrous</div><h2>Where passion becomes musicianship.</h2>
+    <p>Wondrous Music School is dedicated to helping learners develop musical skill through structured lessons, practical training and a supportive learning environment.</p>
+    <p>Our approach is designed to take students from their first notes toward confident, expressive performance while encouraging discipline, creativity and a lifelong connection with music.</p>
+    <div class="motto">“To Inspire · To Enlarge · To Soar.”</div>
+    <div class="stats"><div class="stat"><strong>2024</strong><span>Established</span></div><div class="stat"><strong>2026</strong><span>Admissions open</span></div><div class="stat"><strong>5+</strong><span>Core instruments</span></div></div>
+  </div>
+</div>
+</section>
+
+<section id="courses">
+<div class="container">
+  <div class="section-head"><div class="kicker">Explore your sound</div><h2>Choose your instrument.</h2><p>Build a strong foundation or continue toward advanced musicianship with guided instruction.</p></div>
+  <div class="cards">
+    <article class="card"><img src="assets/school-3.jpeg" alt="Guitar"><div class="card-body"><h3>Guitar</h3><p>Technique, chords, rhythm and performance.</p></div></article>
+    <article class="card"><img src="assets/school-4.jpeg" alt="Keyboard"><div class="card-body"><h3>Keyboard / Piano</h3><p>Keys, theory, coordination and repertoire.</p></div></article>
+    <article class="card"><img src="assets/school-5.jpeg" alt="Drums"><div class="card-body"><h3>Drums</h3><p>Groove, timing, coordination and live playing.</p></div></article>
+    <article class="card"><img src="assets/school-6.jpeg" alt="Violin"><div class="card-body"><h3>Violin</h3><p>Technique, tone, notation and musical expression.</p></div></article>
+    <article class="card"><img src="assets/school-7.jpeg" alt="Bass Guitar"><div class="card-body"><h3>Bass Guitar</h3><p>Rhythm, groove, scales and ensemble playing.</p></div></article>
+  </div>
+</div>
+</section>
+
+<section class="features" id="facilities">
+<div class="container">
+  <div class="section-head"><div class="kicker">The Wondrous experience</div><h2>Learn in an environment built for music.</h2><p>Everything is designed to make learning focused, practical and enjoyable.</p></div>
+  <div class="feature-grid">
+    <div class="feature"><div class="icon">♪</div><h3>Structured Learning</h3><p>Clear progression from initial learning through advanced grades.</p></div>
+    <div class="feature"><div class="icon">♫</div><h3>Practical Training</h3><p>Develop technique through regular instrument-focused practice.</p></div>
+    <div class="feature"><div class="icon">★</div><h3>Performance</h3><p>Build confidence by turning practice into musical expression.</p></div>
+    <div class="feature"><div class="icon">⌂</div><h3>Practice Space</h3><p>A dedicated learning environment that keeps students focused.</p></div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container split">
+  <div>
+    <div class="kicker">Learning pathway</div><h2>From first note to confident performance.</h2>
+    <p style="color:var(--muted)">Students can progress through a clear level structure and prepare for practical and theory examinations.</p>
+    <div class="levels">
+      <div class="level"><strong>FOUNDATION</strong><h3>Initial · Grade 1–2</h3><p style="color:var(--muted);font-size:13px">Build technique, notation and musical basics.</p></div>
+      <div class="level"><strong>DEVELOPMENT</strong><h3>Grade 3–5</h3><p style="color:var(--muted);font-size:13px">Strengthen repertoire, technique and musicianship.</p></div>
+      <div class="level"><strong>ADVANCED</strong><h3>Grade 6–8</h3><p style="color:var(--muted);font-size:13px">Refine performance and advanced musical skills.</p></div>
+    </div>
+  </div>
+  <img class="page5-feature" src="assets/page5-feature.png" alt="Music learning at Wondrous Music School">
+</div>
+</section>
+
+<section class="admission" id="admissions">
+<div class="container admission-box">
+  <div>
+    <div class="kicker">Admissions</div><h2>Make 2026 the year you start.</h2>
+    <p style="color:var(--muted);max-width:650px">Whether you're taking your first lesson or continuing your musical journey, Wondrous Music School welcomes learners who are ready to learn, play and perform.</p>
+    <div class="hero-actions"><a class="btn" style="background:var(--blue);color:#fff" href="#contact">Apply / Enquire</a><a class="btn" style="border:1px solid var(--line)" href="tel:7640918631">Call School</a></div>
+  </div>
+  <div class="admission-art"><span style="letter-spacing:2px;font-size:12px">ADMISSIONS OPEN</span><div class="year">2026</div><p>Begin your musical journey with Wondrous Music School.</p></div>
+</div>
+</section>
+
+<section id="gallery">
+<div class="container">
+  <div class="section-head"><div class="kicker">Our world</div><h2>Moments from the school.</h2><p>A glimpse into the instruments, learning environment and musical atmosphere.</p></div>
+  <div class="gallery moments-gallery">
+    <img class="moment-thumb" src="assets/moment-1.png" data-full="assets/moment-1.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+    <img class="moment-thumb" src="assets/moment-2.png" data-full="assets/moment-2.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+    <img class="moment-thumb" src="assets/moment-3.png" data-full="assets/moment-3.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+    <img class="moment-thumb" src="assets/moment-4.png" data-full="assets/moment-4.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+    <img class="moment-thumb" src="assets/moment-5.png" data-full="assets/moment-5.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+    <img class="moment-thumb" src="assets/moment-6.png" data-full="assets/moment-6.png" alt="Music learning moment at Wondrous Music School" tabindex="0" role="button" aria-label="Open image: Music learning moment at Wondrous Music School">
+  </div>
+</div>
+</section>
+
+<section class="contact" id="contact">
+<div class="container contact-grid">
+  <div>
+    <div class="kicker">Get in touch</div><h2>Ready to make music?</h2><p style="color:var(--muted);margin-bottom:22px">Contact Wondrous Music School for course, batch and admission enquiries.</p>
+    <div class="contact-info">
+      <div class="contact-item"><b>Branch 1</b><span>Dong Lawpynsin, Ummulong, Jowai – 793151<br>Phone: <a href="tel:7640918631">7640918631</a> · <a href="tel:8415058206">8415058206</a></span></div>
+      <div class="contact-item"><b>Branch 2</b><span>Moodop Nartiang, opposite Moodop Girls Hostel<br>Phone: <a href="tel:8415058206">8415058206</a> · <a href="tel:7640918631">7640918631</a></span></div>
+      <div class="contact-item"><b>Hours</b><span>9:00 AM – 6:00 PM · Closed Thursday</span></div>
+      <div class="contact-item"><b>Examinations</b><span>Practical and theory examination sessions are planned for May, August and December.</span></div>
+    </div>
+  </div>
+  <form id="enquiryForm">
+    <h3 style="font-family:'Playfair Display',serif;font-size:27px;color:var(--navy);margin-bottom:20px">Enquiry form</h3>
+    <div class="form-grid">
+      <div class="field"><label>Full name</label><input required name="name" placeholder="Your name"></div>
+      <div class="field"><label>Phone</label><input required name="phone" type="tel" placeholder="Phone number"></div>
+      <div class="field"><label>Email</label><input name="email" type="email" placeholder="Email address"></div>
+      <div class="field"><label>Instrument</label><select name="instrument"><option>Guitar</option><option>Keyboard / Piano</option><option>Drums</option><option>Violin</option><option>Bass Guitar</option></select></div>
+      <div class="field"><label>Level</label><select name="level"><option>Initial</option><option>Grade 1–2</option><option>Grade 3–5</option><option>Grade 6–8</option></select></div>
+      <div class="field"><label>Preferred batch</label><select name="batch"><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
+      <div class="field full"><label>Message</label><textarea name="message" placeholder="Tell us what you would like to learn..."></textarea></div>
+      <div class="field full"><button class="btn" style="background:var(--blue);color:#fff;border:0;cursor:pointer" type="submit">Send Enquiry</button></div>
+    </div>
+  </form>
+</div>
+</section>
+
+<footer>
+<div class="container footer-grid"><div><div class="footer-brand">WONDROUS MUSIC SCHOOL</div><div style="font-size:12px">Learn · Play · Perform. · Estd. 2024</div></div><div class="copyright">© 2026 Wondrous Music School. All rights reserved.</div></div>
+<div class="footer-social"><a class="social-link" href="https://www.facebook.com/profile.php?id=61574230492881&locale=ru_RU#" target="_blank" rel="noopener noreferrer" aria-label="Wondrous Music School on Facebook">Facebook</a></div></footer>
+<div class="notice" id="notice">Thank you! Your enquiry is ready to be sent.</div>
+
+<div class="lightbox" id="imageLightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image viewer">&times;</button>
+  <img id="lightboxImage" src="" alt="">
+</div>
+
+<script>
+document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.navlinks').classList.remove('open')));
+document.getElementById('enquiryForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const data=new FormData(this);
+  const text=`Hello Wondrous Music School,%0A%0AAdmission Enquiry%0AName: ${data.get('name')}%0APhone: ${data.get('phone')}%0AEmail: ${data.get('email')}%0AInstrument: ${data.get('instrument')}%0ALevel: ${data.get('level')}%0ABatch: ${data.get('batch')}%0AMessage: ${data.get('message')}`;
+  window.location.href=`https://wa.me/917640918631?text=${text}`;
+});
+
+const lightbox = document.getElementById('imageLightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxClose = document.getElementById('lightboxClose');
+
+function openLightbox(image) {
+  lightboxImage.src = image.getAttribute('data-full') || image.currentSrc || image.src;
+  lightboxImage.alt = image.alt || 'Full-size music school photograph';
+  lightbox.classList.add('open');
+  lightbox.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  lightboxClose.focus();
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightboxImage.src = '';
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.moment-thumb').forEach((image) => {
+  image.addEventListener('click', () => openLightbox(image));
+  image.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openLightbox(image);
+    }
+  });
+});
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (event) => {
+  if (event.target === lightbox) closeLightbox();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+});
+
+</script>
+
+
+</body>
+</html>
