@@ -231,13 +231,13 @@ returns public.enrollments
 language plpgsql
 security definer
 set search_path = public
-as $enroll$
+as '
 declare
   v_course public.courses%rowtype;
   v_row public.enrollments%rowtype;
 begin
   if auth.uid() is null then
-    raise exception 'Authentication required';
+    raise exception ''Authentication required'';
   end if;
 
   select * into v_course
@@ -245,23 +245,23 @@ begin
   where id = p_course_id and active = true;
 
   if not found then
-    raise exception 'Course not found or inactive';
+    raise exception ''Course not found or inactive'';
   end if;
 
   if p_enquiry_id is not null and not exists (
     select 1 from public.enquiries
     where id = p_enquiry_id and student_id = auth.uid()
   ) then
-    raise exception 'Invalid enquiry';
+    raise exception ''Invalid enquiry'';
   end if;
 
   insert into public.enrollments(student_id,course_id,enquiry_id,branch,level,batch,fee_inr,status)
-  values(auth.uid(),p_course_id,p_enquiry_id,p_branch,p_level,p_batch,v_course.fee_inr,'pending')
+  values(auth.uid(),p_course_id,p_enquiry_id,p_branch,p_level,p_batch,v_course.fee_inr,''pending'')
   returning * into v_row;
 
   return v_row;
 end;
-$enroll$;
+';
 
 revoke all on function public.create_student_enrollment(uuid,text,text,text,uuid) from public, anon;
 grant execute on function public.create_student_enrollment(uuid,text,text,text,uuid) to authenticated;
