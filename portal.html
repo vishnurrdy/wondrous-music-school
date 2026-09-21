@@ -62,26 +62,45 @@ const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
 function show(id){['home','student','admin','dashboard'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'smooth'})}
 function msg(id,text,ok=false){$(id).innerHTML='<div class="status '+(ok?'success':'error')+'">'+text+'</div>'}
+async function completePendingAdmission(uid){
+ const raw=localStorage.getItem('wms_pending_admission');
+ if(!raw) return {ok:true};
+ let form;
+ try{form=JSON.parse(raw)}catch(e){localStorage.removeItem('wms_pending_admission');return {ok:true};}
+ const {data:existing}=await sb.from('enquiries').select('id').eq('student_id',uid).eq('email',form.email).eq('instrument',form.instrument).limit(1);
+ let enquiryId=existing&&existing[0]?.id;
+ if(!enquiryId){
+   const {data:enq,error:e}=await sb.from('enquiries').insert({student_id:uid,full_name:form.full_name,phone:form.phone,email:form.email,instrument:form.instrument,level:form.level,preferred_batch:form.batch,message:form.message}).select('id').single();
+   if(e) return {ok:false,error:e.message};
+   enquiryId=enq.id;
+ }
+ const {data:courses,error:ce}=await sb.from('courses').select('id').eq('name',form.instrument).eq('active',true).limit(1);
+ if(ce||!courses?.[0]) return {ok:false,error:ce?.message||'Selected course is unavailable'};
+ const {error:ee}=await sb.rpc('create_student_enrollment',{p_course_id:courses[0].id,p_branch:form.branch,p_level:form.level,p_batch:form.batch,p_enquiry_id:enquiryId});
+ if(ee && !/duplicate|already exists/i.test(ee.message||'')) return {ok:false,error:ee.message};
+ localStorage.removeItem('wms_pending_admission');
+ return {ok:true};
+}
+
 async function registerStudent(){
  if(!cfg.SUPABASE_URL||cfg.SUPABASE_URL.includes('YOUR-')) return msg('signupMsg','Add your Supabase URL and publishable key in config.js first.');
  const email=$('sEmail').value.trim(), password=$('sPassword').value;
  if(!email||password.length<8||!$('sName').value.trim()) return msg('signupMsg','Name, email and an 8+ character password are required.');
- const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:$('sName').value.trim(),phone:$('sPhone').value.trim()}}});
+ const pending={full_name:$('sName').value.trim(),phone:$('sPhone').value.trim(),email,instrument:$('sInstrument').value,level:$('sLevel').value,batch:$('sBatch').value,branch:$('sBranch').value,message:$('sMessage').value};
+ const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:pending.full_name,phone:pending.phone,branch:pending.branch,instrument:pending.instrument}}});
  if(error) return msg('signupMsg',error.message);
  if(!data.user) return msg('signupMsg','Account created. Check your email to confirm the account.',true);
- const uid=data.user.id;
- const {error:e}=await sb.from('enquiries').insert({student_id:uid,full_name:$('sName').value.trim(),phone:$('sPhone').value.trim(),email,instrument:$('sInstrument').value,level:$('sLevel').value,preferred_batch:$('sBatch').value,message:$('sMessage').value});
- if(e) return msg('signupMsg','Account created, but the enquiry could not be saved: '+e.message);
- const {data:courses}=await sb.from('courses').select('id').eq('name',$('sInstrument').value).eq('active',true).limit(1);
- const course=courses&&courses[0];
- if(course){
-   const {data:enquiry}=await sb.from('enquiries').select('id').eq('student_id',uid).order('created_at',{ascending:false}).limit(1).single();
-   const {error:ee}=await sb.rpc('create_student_enrollment',{p_course_id:course.id,p_branch:$('sBranch').value,p_level:$('sLevel').value,p_batch:$('sBatch').value,p_enquiry_id:enquiry?.id||null});
-   if(ee) return msg('signupMsg','Account created, but enrollment setup failed: '+ee.message);
+ localStorage.setItem('wms_pending_admission',JSON.stringify(pending));
+ if(data.session){
+   const result=await completePendingAdmission(data.user.id);
+   if(!result.ok) return msg('signupMsg','Account created, but admission setup needs attention: '+result.error);
+   msg('signupMsg','Account, enquiry and enrollment created successfully. You can now open your student dashboard.',true);
+ }else{
+   msg('signupMsg','Account created. Please confirm your email, then use Student Login. Your admission details are saved securely for completion after login.',true);
  }
- msg('signupMsg','Account and enquiry created. Please confirm your email, then log in to continue to payment.',true);
  show('student');
 }
+
 async function login(type){
  const email=$(type==='student'?'loginEmail':'adminEmail').value.trim();
  const password=$(type==='student'?'loginPassword':'adminPassword').value;
@@ -91,6 +110,10 @@ async function login(type){
  if(pe) return msg(type+'Msg',pe.message);
  if(type==='admin' && p.role!=='admin'){await sb.auth.signOut();return msg('adminMsg','This account is not an admin account.');}
  if(type==='student' && p.role==='admin'){await sb.auth.signOut();return msg('studentMsg','Use the Admin Login for this account.');}
+ if(type==='student'){
+   const pendingResult=await completePendingAdmission(p.id);
+   if(!pendingResult.ok) return msg('studentMsg','Login succeeded, but admission setup needs attention: '+pendingResult.error);
+ }
  await dashboard(p);
 }
 async function dashboard(p){
