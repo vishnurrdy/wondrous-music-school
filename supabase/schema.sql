@@ -145,8 +145,8 @@ alter table public.payments enable row level security;
 
 revoke all on table public.profiles, public.courses, public.instructors, public.enquiries, public.enrollments, public.payments from anon;
 grant select on public.courses, public.instructors to anon;
-grant select, insert, update on public.profiles, public.enquiries, public.enrollments, public.payments to authenticated;
-grant select on public.courses, public.instructors to authenticated;
+grant select, insert on public.enquiries to authenticated;
+grant select on public.profiles, public.enrollments, public.payments, public.courses, public.instructors to authenticated;
 grant update on public.enquiries, public.enrollments, public.payments to authenticated;
 
 drop policy if exists profiles_self_select on public.profiles;
@@ -154,9 +154,10 @@ create policy profiles_self_select on public.profiles for select to authenticate
 using ((select auth.uid()) = id or (select private.is_admin()));
 
 drop policy if exists profiles_self_update on public.profiles;
-create policy profiles_self_update on public.profiles for update to authenticated
-using ((select auth.uid()) = id or (select private.is_admin()))
-with check ((select auth.uid()) = id or (select private.is_admin()));
+drop policy if exists profiles_admin_update on public.profiles;
+create policy profiles_admin_update on public.profiles for update to authenticated
+using ((select private.is_admin()))
+with check ((select private.is_admin()));
 
 drop policy if exists courses_public_read on public.courses;
 create policy courses_public_read on public.courses for select to anon, authenticated
@@ -180,8 +181,6 @@ using ((select private.is_admin()))
 with check ((select private.is_admin()));
 
 drop policy if exists enrollments_student_insert on public.enrollments;
-create policy enrollments_student_insert on public.enrollments for insert to authenticated
-with check ((select auth.uid()) = student_id);
 
 drop policy if exists enrollments_student_read on public.enrollments;
 create policy enrollments_student_read on public.enrollments for select to authenticated
@@ -193,8 +192,6 @@ using ((select private.is_admin()))
 with check ((select private.is_admin()));
 
 drop policy if exists payments_student_insert on public.payments;
-create policy payments_student_insert on public.payments for insert to authenticated
-with check ((select auth.uid()) = student_id);
 
 drop policy if exists payments_student_read on public.payments;
 create policy payments_student_read on public.payments for select to authenticated
@@ -217,6 +214,54 @@ on conflict (name) do nothing;
 insert into public.instructors (name,title,branch,bio) values
  ('Miss. RATAKIRU PARIAT','Principal','Moodop Nartiang Branch','School leadership and academic coordination.'),
  ('Mr. ONIKSON PARIAT','Chairman / Principal','Ummulong Branch','School leadership and branch coordination.');
+
+-- Students request an enrollment through this trusted database function.
+-- The fee is always copied from the selected course, never accepted from the browser.
+create or replace function public.create_student_enrollment(
+  p_course_id uuid,
+  p_branch text,
+  p_level text,
+  p_batch text,
+  p_enquiry_id uuid default null
+)
+returns public.enrollments
+language plpgsql
+security definer
+set search_path = public
+as $
+declare
+  v_course public.courses%rowtype;
+  v_row public.enrollments%rowtype;
+begin
+  if auth.uid() is null then
+    raise exception 'Authentication required';
+  end if;
+
+  select * into v_course
+  from public.courses
+  where id = p_course_id and active = true;
+
+  if not found then
+    raise exception 'Course not found or inactive';
+  end if;
+
+  if p_enquiry_id is not null and not exists (
+    select 1 from public.enquiries
+    where id = p_enquiry_id and student_id = auth.uid()
+  ) then
+    raise exception 'Invalid enquiry';
+  end if;
+
+  insert into public.enrollments(student_id,course_id,enquiry_id,branch,level,batch,fee_inr,status)
+  values(auth.uid(),p_course_id,p_enquiry_id,p_branch,p_level,p_batch,v_course.fee_inr,'pending')
+  returning * into v_row;
+
+  return v_row;
+end;
+$;
+
+revoke all on function public.create_student_enrollment(uuid,text,text,text,uuid) from public, anon;
+grant execute on function public.create_student_enrollment(uuid,text,text,text,uuid) to authenticated;
 
 -- After creating the admin Auth user, promote it:
 -- update public.profiles set role = 'admin' where id = 'YOUR-AUTH-USER-UUID';
