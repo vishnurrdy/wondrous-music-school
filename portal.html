@@ -16,42 +16,32 @@
 <body>
 <div class="top"><b>WONDROUS MUSIC SCHOOL</b><span>Secure Student & Admin Portal</span></div>
 <main class="wrap">
-<section class="hero"><h1>Learn. Play. Perform.</h1><p>Admissions, student records, payments and administration in one place.</p>
+<section class="hero"><h1>Student & Admin Portal</h1><p>Sign in to access your Wondrous Music School account.</p>
 <div class="tabs">
-<button onclick="show('home')">Portal Home</button><button class="tab alt" onclick="show('student')">Student Login</button><button class="tab alt" onclick="show('admin')">Admin Login</button>
-</div>
-<div class="status"><b>One secure account, one dashboard.</b> Students see only their own records. Administrators see school records according to their admin role.</div></section>
+<button onclick="show('student')">Student Login</button>
+<button class="tab alt" onclick="show('admin')">Admin Login</button>
+</div></section>
 
-<section id="home" class="panel">
-<h2>New admission</h2>
-<p class="muted">Create a student account first. Your enquiry is stored in the database and a payment record is created after submission.</p>
-<div id="signupMsg"></div>
+<section id="login" class="panel">
+<h2>Secure Login</h2>
+<p class="muted">Choose your account type above to continue.</p>
 <div class="grid2">
-<div>
-<div class="field"><label>Full name</label><input id="sName" placeholder="Student name"></div>
-<div class="field"><label>Phone</label><input id="sPhone" placeholder="Phone number"></div>
-<div class="field"><label>Email</label><input id="sEmail" type="email" placeholder="Email"></div>
-<div class="field"><label>Password</label><input id="sPassword" type="password" minlength="8" placeholder="Minimum 8 characters"></div>
+<div class="card">
+<h3>Student Login</h3>
+<p class="muted">Access your profile, enrollments and payment history.</p>
+<button onclick="show('student')">Student Login</button>
 </div>
-<div>
-<div class="field"><label>Instrument</label><select id="sInstrument"><option>Guitar</option><option>Keyboard / Piano</option><option>Drums</option><option>Violin</option><option>Bass Guitar</option><option>Ukulele</option></select></div>
-<div class="field"><label>Level</label><select id="sLevel"><option>Initial</option><option>Grade 1–2</option><option>Grade 3–5</option><option>Grade 6–8</option></select></div>
-<div class="field"><label>Preferred batch</label><select id="sBatch"><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
-<div class="field"><label>Branch</label><select id="sBranch"><option>Ummulong Branch</option><option>Moodop Nartiang Branch</option></select></div>
-</div></div>
-<div class="field"><label>Message</label><textarea id="sMessage" placeholder="Tell the school what you want to learn..."></textarea></div>
-<button onclick="registerStudent()">Create Student Account & Submit Enquiry</button>
+<div class="card">
+<h3>Admin Login</h3>
+<p class="muted">Access school administration records.</p>
+<button onclick="show('admin')">Admin Login</button>
+</div>
+</div>
 </section>
 
-<section class="panel"><h2>Instructors</h2><div class="grid">
-<div class="card instructor"><div class="avatar"><img src="assets/instructor-ratakiru.jpg" alt="Miss. RATAKIRU PARIAT"></div><div><h3>Miss. RATAKIRU PARIAT</h3><div class="muted">Principal · Moodop Nartiang Branch</div></div></div>
-<div class="card instructor"><div class="avatar"><img src="assets/instructor-onikson.jpg" alt="Mr. ONIKSON PARIAT"></div><div><h3>Mr. ONIKSON PARIAT</h3><div class="muted">Chairman / Principal · Ummulong Branch</div></div></div>
-<div class="card"><img src="assets/moment-4.png" alt="Ukulele course" style="width:100%;height:170px;object-fit:cover;border-radius:9px;margin-bottom:12px"><h3>Ukulele</h3><p class="muted">New course: chords, strumming, rhythm and beginner performance.</p><div class="price">₹1,200</div></div>
-</div><p class="muted small">Student records, enrolments and payment history are protected by database-level access rules.</p></section>
+<section id="student" class="panel hidden"><h2>Student Login</h2><div id="studentMsg"></div><div class="field"><label>Email</label><input id="loginEmail" type="email"></div><div class="field"><label>Password</label><input id="loginPassword" type="password"></div><button onclick="login('student')">Login</button> <button class="tab alt" onclick="show('login')">Back</button></section>
 
-<section id="student" class="panel hidden"><h2>Student Login</h2><div id="studentMsg"></div><div class="field"><label>Email</label><input id="loginEmail" type="email"></div><div class="field"><label>Password</label><input id="loginPassword" type="password"></div><button onclick="login('student')">Login</button></section>
-
-<section id="admin" class="panel hidden"><h2>Admin Login</h2><div id="adminMsg"></div><div class="field"><label>Admin email</label><input id="adminEmail" type="email"></div><div class="field"><label>Password</label><input id="adminPassword" type="password"></div><button onclick="login('admin')">Secure Admin Login</button></section>
+<section id="admin" class="panel hidden"><h2>Admin Login</h2><div id="adminMsg"></div><div class="field"><label>Admin email</label><input id="adminEmail" type="email"></div><div class="field"><label>Password</label><input id="adminPassword" type="password"></div><button onclick="login('admin')">Secure Admin Login</button> <button class="tab alt" onclick="show('login')">Back</button></section>
 
 <section id="dashboard" class="panel hidden"><button class="logout" onclick="logout()">Logout</button><h2 id="dashTitle">Dashboard</h2><div id="dash"></div></section>
 <div class="footer">Security: Supabase Auth + Postgres RLS. Payment status must be verified by a trusted server/Edge Function before a payment becomes “paid”.</div>
@@ -60,7 +50,7 @@
 const cfg=window.WONDROUS_CONFIG||{};
 const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
-function show(id){['home','student','admin','dashboard'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'smooth'})}
+function show(id){['login','student','admin','dashboard'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'smooth'})}
 function msg(id,text,ok=false){$(id).innerHTML='<div class="status '+(ok?'success':'error')+'">'+text+'</div>'}
 async function completePendingAdmission(uid){
  const raw=localStorage.getItem('wms_pending_admission');
@@ -184,7 +174,7 @@ async function currentProfile(){
 }
 function rows(data,cols){if(!data||!data.length)return '<div class="status">No records yet.</div>';return '<div style="overflow:auto"><table><thead><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+data.map(r=>'<tr>'+cols.map(c=>'<td>'+esc(String(c).split('.').reduce((o,k)=>o&&o[k],r)??'' )+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-async function logout(){await sb.auth.signOut();show('home')}
+async function logout(){await sb.auth.signOut();show('login')}
 (async()=>{const {data}=await sb.auth.getSession();if(data.session){const {data:p}=await sb.from('profiles').select('*').eq('id',data.session.user.id).single();if(p)dashboard(p)}})();
 </script>
 </body>
