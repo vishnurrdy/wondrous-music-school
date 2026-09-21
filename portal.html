@@ -10,7 +10,6 @@
 *{box-sizing:border-box}body{margin:0;font-family:"DM Sans",sans-serif;background:#f5f9fd;color:#10233f}button,input,select,textarea{font:inherit}.top{background:var(--navy);color:#fff;padding:14px 5%;display:flex;justify-content:space-between;gap:15px}.wrap{width:min(1150px,92%);margin:auto}.hero{padding:42px 0 25px}.hero h1{font:800 45px "Playfair Display";margin:0 0 8px;color:var(--navy)}.hero p{color:var(--muted)}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.tab,button{border:0;border-radius:8px;padding:12px 17px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.tab.alt{background:#fff;color:var(--navy);border:1px solid var(--line)}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;margin:16px 0;box-shadow:0 12px 35px #0a3c7010}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff}.card h3{margin:4px 0;color:var(--navy)}.price{font-size:23px;color:var(--blue);font-weight:800}.muted{color:var(--muted);font-size:13px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;font-weight:700}.field input,.field select,.field textarea{border:1px solid #cbdbea;border-radius:8px;padding:11px;width:100%;background:#fff}.field textarea{min-height:90px}.hidden{display:none!important}.status{padding:10px;border-radius:8px;background:var(--soft);margin:12px 0}.success{background:#eaf8f1;color:#075c43}.error{background:#fff0ee;color:var(--red)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--navy)}.badge{padding:4px 8px;border-radius:99px;background:#edf3fa}.instructor{display:flex;gap:14px;align-items:center}.avatar{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:#dceeff;color:var(--blue);font-weight:800;font-size:23px;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.small{font-size:12px}.danger{background:#b42318}.logout{float:right;background:#fff;color:var(--navy);border:1px solid #fff}.footer{padding:35px 0;color:var(--muted);font-size:12px}@media(max-width:800px){.grid,.grid2{grid-template-columns:1fr}.hero h1{font-size:36px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="config.js"></script>
 </head>
 <body>
@@ -44,7 +43,7 @@
 <section id="admin" class="panel hidden"><h2>Admin Login</h2><div id="adminMsg"></div><div class="field"><label>Admin email</label><input id="adminEmail" type="email"></div><div class="field"><label>Password</label><input id="adminPassword" type="password"></div><button onclick="login('admin')">Secure Admin Login</button> <button class="tab alt" onclick="show('login')">Back</button></section>
 
 <section id="dashboard" class="panel hidden"><button class="logout" onclick="logout()">Logout</button><h2 id="dashTitle">Dashboard</h2><div id="dash"></div></section>
-<div class="footer">Security: Supabase Auth + Postgres RLS. Payment status must be verified by a trusted server/Edge Function before a payment becomes “paid”.</div>
+<div class="footer">Security: Supabase Auth + Postgres RLS.</div>
 </main>
 <script>
 const cfg=window.WONDROUS_CONFIG||{};
@@ -115,12 +114,10 @@ async function studentDash(p){
  const [enq,enr,pay]=await Promise.all([
   sb.from('enquiries').select('*').eq('student_id',p.id).order('created_at',{ascending:false}),
   sb.from('enrollments').select('*,courses(name)').eq('student_id',p.id).order('created_at',{ascending:false}),
-  sb.from('payments').select('*').eq('student_id',p.id).order('created_at',{ascending:false})
  ]);
  let html='<div class="grid2"><div class="card"><h3>Profile</h3><p>'+esc(p.full_name)+'</p><p>'+esc(p.phone||'')+'</p><p>'+esc(p.branch||'')+'</p></div><div class="card"><h3>Next step</h3><p class="muted">Submit an enquiry, then an admin can activate your enrollment. Payment records remain visible here.</p></div></div>';
  html+='<div class="card"><h3>Welcome back, '+esc(p.full_name||'Student')+'</h3><p class="muted">Your personal records, enrolments and payment history are shown below.</p></div>';
  html+='<h3>My Enrollments</h3>'+enrollmentRows(enr.data);
- html+='<h3>Payment History</h3>'+rows(pay.data,['receipt','amount_inr','provider','status','created_at']);
  html+='<h3>My Enquiries</h3>'+rows(enq.data,['instrument','level','preferred_batch','status','created_at']);
  $('dash').innerHTML=html;
 }
@@ -143,29 +140,6 @@ function enrollmentRows(data){
  return '<div style="overflow:auto"><table><thead><tr><th>Course</th><th>Level</th><th>Batch</th><th>Fee</th><th>Status</th><th>Payment</th></tr></thead><tbody>'+
  data.map(r=>'<tr><td>'+esc(r.courses?.name||'')+'</td><td>'+esc(r.level||'')+'</td><td>'+esc(r.batch||'')+'</td><td>₹'+esc(r.fee_inr||0)+'</td><td>'+esc(r.status||'')+'</td><td><button onclick="startPayment(\''+esc(r.id)+'\')">Pay Now</button></td></tr>').join('')+
  '</tbody></table></div>';
-}
-async function startPayment(enrollmentId){
- const {data:{session}}=await sb.auth.getSession();
- if(!session)return alert('Please log in again.');
- if(typeof Razorpay==='undefined')return alert('Payment gateway is not loaded.');
- const {data,error}=await sb.functions.invoke('create-payment-order-v2',{body:{enrollment_id:enrollmentId}});
- if(error||!data)return alert(error?.message||data?.error||'Could not create payment order.');
- const options={
-   key:data.key_id, amount:data.order.amount, currency:data.order.currency,
-   name:cfg.SCHOOL_NAME||'Wondrous Music School', description:'Music school enrollment fee',
-   order_id:data.order.id,
-   prefill:{name:session.user.user_metadata?.full_name||'',email:session.user.email||'',contact:session.user.user_metadata?.phone||''},
-   theme:{color:'#0757b7'},
-   handler:async function(response){
-     const result=await sb.functions.invoke('verify-payment-v2',{body:{
-       payment_id:data.payment.id, razorpay_order_id:response.razorpay_order_id,
-       razorpay_payment_id:response.razorpay_payment_id, razorpay_signature:response.razorpay_signature
-     }});
-     if(result.error||result.data?.error) alert(result.error?.message||result.data?.error||'Payment verification failed.');
-     else {alert('Payment verified successfully. Your payment history has been updated.');await studentDash(await currentProfile());}
-   }
- };
- new Razorpay(options).open();
 }
 async function currentProfile(){
  const {data:{user}}=await sb.auth.getUser();
