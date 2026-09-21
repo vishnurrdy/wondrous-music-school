@@ -62,7 +62,7 @@ h2{font-family:"Playfair Display",serif;font-size:clamp(32px,4vw,48px);line-heig
 .stat strong{font-size:24px;color:var(--blue);display:block}.stat span{font-size:12px;color:var(--muted)}
 .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
 .card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;transition:.25s;box-shadow:0 8px 30px #0a3c7010}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px #0a3c7020}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px #0a3c7020}\n.instructors{background:#f7fbff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}\n.instructor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}\n.instructor-card{display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px #0a3c7010}\n.instructor-card img{width:180px;height:220px;border-radius:12px;object-fit:cover}\n.instructor-card h3{font-family:"Playfair Display",serif;color:var(--navy);font-size:22px;line-height:1.2}\n.instructor-role{color:var(--blue);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:7px 0}\n.instructor-branch{color:var(--muted);font-size:14px}\n.instructor-card p{color:var(--muted);font-size:13px;margin-top:10px}\n@media(max-width:580px){.instructor-grid{grid-template-columns:1fr}.instructor-card{grid-template-columns:100px 1fr;padding:13px;gap:14px}.instructor-card img{width:100px;height:140px}.instructor-card h3{font-size:18px}}
 .card img{height:170px}.card-body{padding:18px}.card h3{font-size:18px;color:var(--navy)}.card p{font-size:13px;color:var(--muted);margin-top:5px}
 .features{background:var(--navy);color:#fff}.features h2{color:#fff}.features .section-head p{color:#bdd0e8}
 .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
@@ -107,7 +107,7 @@ footer{background:#041a38;color:#bcd0e7;padding:35px 0}.footer-grid{display:flex
     <a class="brand" href="#home"><div class="logo"><img src="assets/wondrous-logo.png" alt="Wondrous Music School logo"></div><div><strong>WONDROUS</strong><small>MUSIC SCHOOL</small></div></a>
     <button class="menu" aria-label="Open menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
     <div class="navlinks">
-      <a href="#home">Home</a><a href="#about">About</a><a href="#courses">Courses</a><a href="#facilities">Facilities</a><a href="#gallery">Gallery</a><a href="#admissions">Admissions</a><a href="#contact">Contact</a>
+      <a href="#home">Home</a><a href="#about">About</a><a href="#courses">Courses</a><a href="#facilities">Facilities</a><a href="#instructors">Instructors</a><a href="#gallery">Gallery</a><a href="#admissions">Admissions</a><a href="#contact">Contact</a>
       <a class="cta" href="#contact">Enquire Now</a>
     </div>
   </div>
@@ -224,7 +224,7 @@ footer{background:#041a38;color:#bcd0e7;padding:35px 0}.footer-grid{display:flex
       <div class="field"><label>Full name</label><input required name="name" placeholder="Your name"></div>
       <div class="field"><label>Phone</label><input required name="phone" type="tel" placeholder="Phone number"></div>
       <div class="field"><label>Email</label><input name="email" type="email" placeholder="Email address"></div>
-      <div class="field"><label>Instrument</label><select name="instrument"><option>Guitar</option><option>Keyboard / Piano</option><option>Drums</option><option>Violin</option><option>Bass Guitar</option></select></div>
+      <div class="field"><label>Instrument</label><select name="instrument"><option>Guitar</option><option>Keyboard / Piano</option><option>Drums</option><option>Violin</option><option>Bass Guitar</option><option>Ukulele</option></select></div>
       <div class="field"><label>Level</label><select name="level"><option>Initial</option><option>Grade 1–2</option><option>Grade 3–5</option><option>Grade 6–8</option></select></div>
       <div class="field"><label>Preferred batch</label><select name="batch"><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
       <div class="field full"><label>Message</label><textarea name="message" placeholder="Tell us what you would like to learn..."></textarea></div>
