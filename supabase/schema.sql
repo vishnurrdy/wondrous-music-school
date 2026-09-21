@@ -108,11 +108,12 @@ returns trigger language plpgsql
 security definer set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, full_name, phone, role)
+  insert into public.profiles (id, full_name, phone, branch, instrument, role)
   values (new.id, coalesce(new.raw_user_meta_data ->> 'full_name',''),
-          coalesce(new.raw_user_meta_data ->> 'phone',''), 
+          coalesce(new.raw_user_meta_data ->> 'phone',''),
           coalesce(new.raw_user_meta_data ->> 'branch',''),
-          coalesce(new.raw_user_meta_data ->> 'instrument',''), 'student')
+          coalesce(new.raw_user_meta_data ->> 'instrument',''),
+          'student')
   on conflict (id) do nothing;
   return new;
 end;
