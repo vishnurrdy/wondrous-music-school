@@ -231,7 +231,7 @@ returns public.enrollments
 language plpgsql
 security definer
 set search_path = public
-as $
+as $enroll$
 declare
   v_course public.courses%rowtype;
   v_row public.enrollments%rowtype;
@@ -261,7 +261,7 @@ begin
 
   return v_row;
 end;
-$;
+$enroll$;
 
 revoke all on function public.create_student_enrollment(uuid,text,text,text,uuid) from public, anon;
 grant execute on function public.create_student_enrollment(uuid,text,text,text,uuid) to authenticated;
