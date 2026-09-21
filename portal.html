@@ -118,7 +118,8 @@ async function adminDash(){
   sb.from('enquiries').select('*').order('created_at',{ascending:false}),
   sb.from('enrollments').select('*,profiles(full_name),courses(name)').order('created_at',{ascending:false})
  ]);
- let html='<div class="grid"><div class="card"><h3>Students</h3><div class="price">'+(students.data||[]).length+'</div></div><div class="card"><h3>Payments</h3><div class="price">'+(payments.data||[]).length+'</div></div><div class="card"><h3>Enquiries</h3><div class="price">'+(enq.data||[]).length+'</div></div></div>';
+ let html='<div class="grid"><div class="card"><h3>Students</h3><div class="price">'+(students.data||[]).length+'</div><p class="muted">Registered student accounts</p></div><div class="card"><h3>Payments</h3><div class="price">'+(payments.data||[]).length+'</div><p class="muted">Gateway payment records</p></div><div class="card"><h3>Enquiries</h3><div class="price">'+(enq.data||[]).length+'</div><p class="muted">Admission enquiries</p></div></div>';
+ html+='<h3>All Students</h3>'+rows(students.data,['full_name','phone','branch','instrument','created_at']);
  html+='<h3>Student Payments</h3>'+rows(payments.data,['profiles.full_name','amount_inr','provider','status','receipt','created_at']);
  html+='<h3>Enquiries</h3>'+rows(enq.data,['full_name','phone','instrument','level','preferred_batch','status','created_at']);
  html+='<h3>Enrollments</h3>'+rows(enr.data,['profiles.full_name','courses.name','level','batch','fee_inr','status']);
