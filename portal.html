@@ -19,7 +19,8 @@
 <section class="hero"><h1>Learn. Play. Perform.</h1><p>Admissions, student records, payments and administration in one place.</p>
 <div class="tabs">
 <button onclick="show('home')">Portal Home</button><button class="tab alt" onclick="show('student')">Student Login</button><button class="tab alt" onclick="show('admin')">Admin Login</button>
-</div></section>
+</div>
+<div class="status"><b>One secure account, one dashboard.</b> Students see only their own records. Administrators see school records according to their admin role.</div></section>
 
 <section id="home" class="panel">
 <h2>New admission</h2>
@@ -43,10 +44,10 @@
 </section>
 
 <section class="panel"><h2>Instructors</h2><div class="grid">
-<div class="card instructor"><div class="avatar">RP</div><div><h3>Miss. RATAKIRU PARIAT</h3><div class="muted">Principal · Moodop Nartiang Branch</div></div></div>
-<div class="card instructor"><div class="avatar">OP</div><div><h3>Mr. ONIKSON PARIAT</h3><div class="muted">Chairman / Principal · Ummulong Branch</div></div></div>
-<div class="card"><h3>Ukulele</h3><p class="muted">New course: chords, strumming, rhythm and beginner performance.</p><div class="price">₹1,200</div></div>
-</div><p class="muted small">The supplied instructor photos can be connected as local assets after they are added to the repository; the names and branch roles are already structured in the database.</p></section>
+<div class="card instructor"><div class="avatar"><img src="assets/instructor-ratakiru.jpg" alt="Miss. RATAKIRU PARIAT"></div><div><h3>Miss. RATAKIRU PARIAT</h3><div class="muted">Principal · Moodop Nartiang Branch</div></div></div>
+<div class="card instructor"><div class="avatar"><img src="assets/instructor-onikson.jpg" alt="Mr. ONIKSON PARIAT"></div><div><h3>Mr. ONIKSON PARIAT</h3><div class="muted">Chairman / Principal · Ummulong Branch</div></div></div>
+<div class="card"><img src="assets/moment-4.png" alt="Ukulele course" style="width:100%;height:170px;object-fit:cover;border-radius:9px;margin-bottom:12px"><h3>Ukulele</h3><p class="muted">New course: chords, strumming, rhythm and beginner performance.</p><div class="price">₹1,200</div></div>
+</div><p class="muted small">Student records, enrolments and payment history are protected by database-level access rules.</p></section>
 
 <section id="student" class="panel hidden"><h2>Student Login</h2><div id="studentMsg"></div><div class="field"><label>Email</label><input id="loginEmail" type="email"></div><div class="field"><label>Password</label><input id="loginPassword" type="password"></div><button onclick="login('student')">Login</button></section>
 
@@ -71,9 +72,13 @@ async function registerStudent(){
  const uid=data.user.id;
  const {error:e}=await sb.from('enquiries').insert({student_id:uid,full_name:$('sName').value.trim(),phone:$('sPhone').value.trim(),email,instrument:$('sInstrument').value,level:$('sLevel').value,preferred_batch:$('sBatch').value,message:$('sMessage').value});
  if(e) return msg('signupMsg','Account created, but the enquiry could not be saved: '+e.message);
- const {data:courses}=await sb.from('courses').select('id,fee_inr').eq('name',$('sInstrument').value).limit(1);
+ const {data:courses}=await sb.from('courses').select('id').eq('name',$('sInstrument').value).eq('active',true).limit(1);
  const course=courses&&courses[0];
- if(course) await sb.from('enrollments').insert({student_id:uid,course_id:course.id,branch:$('sBranch').value,level:$('sLevel').value,batch:$('sBatch').value,fee_inr:course.fee_inr,status:'pending'});
+ if(course){
+   const {data:enquiry}=await sb.from('enquiries').select('id').eq('student_id',uid).order('created_at',{ascending:false}).limit(1).single();
+   const {error:ee}=await sb.rpc('create_student_enrollment',{p_course_id:course.id,p_branch:$('sBranch').value,p_level:$('sLevel').value,p_batch:$('sBatch').value,p_enquiry_id:enquiry?.id||null});
+   if(ee) return msg('signupMsg','Account created, but enrollment setup failed: '+ee.message);
+ }
  msg('signupMsg','Account and enquiry created. Please confirm your email, then log in to continue to payment.',true);
  show('student');
 }
@@ -100,6 +105,7 @@ async function studentDash(p){
   sb.from('payments').select('*').eq('student_id',p.id).order('created_at',{ascending:false})
  ]);
  let html='<div class="grid2"><div class="card"><h3>Profile</h3><p>'+esc(p.full_name)+'</p><p>'+esc(p.phone||'')+'</p><p>'+esc(p.branch||'')+'</p></div><div class="card"><h3>Next step</h3><p class="muted">Submit an enquiry, then an admin can activate your enrollment. Payment records remain visible here.</p></div></div>';
+ html+='<div class="card"><h3>Welcome back, '+esc(p.full_name||'Student')+'</h3><p class="muted">Your personal records, enrolments and payment history are shown below.</p></div>';
  html+='<h3>My Enrollments</h3>'+enrollmentRows(enr.data);
  html+='<h3>Payment History</h3>'+rows(pay.data,['receipt','amount_inr','provider','status','created_at']);
  html+='<h3>My Enquiries</h3>'+rows(enq.data,['instrument','level','preferred_batch','status','created_at']);
