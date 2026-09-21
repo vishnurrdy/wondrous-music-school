@@ -27,7 +27,7 @@
 <div class="grid2">
 <div class="card">
 <h3>Student Login</h3>
-<p class="muted">Access your profile, enrollments and payment history.</p>
+<p class="muted">Access your profile and enrollments.</p>
 <button onclick="show('student')">Student Login</button>
 </div>
 <div class="card">
@@ -111,26 +111,24 @@ async function dashboard(p){
  return studentDash(p);
 }
 async function studentDash(p){
- const [enq,enr,pay]=await Promise.all([
+ const [enq,enr]=await Promise.all([
   sb.from('enquiries').select('*').eq('student_id',p.id).order('created_at',{ascending:false}),
   sb.from('enrollments').select('*,courses(name)').eq('student_id',p.id).order('created_at',{ascending:false}),
  ]);
- let html='<div class="grid2"><div class="card"><h3>Profile</h3><p>'+esc(p.full_name)+'</p><p>'+esc(p.phone||'')+'</p><p>'+esc(p.branch||'')+'</p></div><div class="card"><h3>Next step</h3><p class="muted">Submit an enquiry, then an admin can activate your enrollment. Payment records remain visible here.</p></div></div>';
- html+='<div class="card"><h3>Welcome back, '+esc(p.full_name||'Student')+'</h3><p class="muted">Your personal records, enrolments and payment history are shown below.</p></div>';
+ let html='<div class="grid2"><div class="card"><h3>Profile</h3><p>'+esc(p.full_name)+'</p><p>'+esc(p.phone||'')+'</p><p>'+esc(p.branch||'')+'</p></div><div class="card"><h3>Next step</h3><p class="muted">Submit an enquiry, then an admin can activate your enrollment.</p></div></div>';
+ html+='<div class="card"><h3>Welcome back, '+esc(p.full_name||'Student')+'</h3><p class="muted">Your personal records, enrolments are shown below.</p></div>';
  html+='<h3>My Enrollments</h3>'+enrollmentRows(enr.data);
  html+='<h3>My Enquiries</h3>'+rows(enq.data,['instrument','level','preferred_batch','status','created_at']);
  $('dash').innerHTML=html;
 }
 async function adminDash(){
- const [students,payments,enq,enr]=await Promise.all([
+ const [students,enq,enr]=await Promise.all([
   sb.from('profiles').select('*').eq('role','student').order('created_at',{ascending:false}),
-  sb.from('payments').select('*,profiles(full_name,phone)').order('created_at',{ascending:false}),
   sb.from('enquiries').select('*').order('created_at',{ascending:false}),
   sb.from('enrollments').select('*,profiles(full_name),courses(name)').order('created_at',{ascending:false})
  ]);
- let html='<div class="grid"><div class="card"><h3>Students</h3><div class="price">'+(students.data||[]).length+'</div><p class="muted">Registered student accounts</p></div><div class="card"><h3>Payments</h3><div class="price">'+(payments.data||[]).length+'</div><p class="muted">Gateway payment records</p></div><div class="card"><h3>Enquiries</h3><div class="price">'+(enq.data||[]).length+'</div><p class="muted">Admission enquiries</p></div></div>';
+ let html='<div class="grid"><div class="card"><h3>Students</h3><div class="price">'+(students.data||[]).length+'</div><p class="muted">Registered student accounts</p></div><div class="card"><h3>Enquiries</h3><div class="price">'+(enq.data||[]).length+'</div><p class="muted">Admission enquiries</p></div></div>';
  html+='<h3>All Students</h3>'+rows(students.data,['full_name','phone','branch','instrument','created_at']);
- html+='<h3>Student Payments</h3>'+rows(payments.data,['profiles.full_name','amount_inr','provider','status','receipt','created_at']);
  html+='<h3>Enquiries</h3>'+rows(enq.data,['full_name','phone','instrument','level','preferred_batch','status','created_at']);
  html+='<h3>Enrollments</h3>'+rows(enr.data,['profiles.full_name','courses.name','level','batch','fee_inr','status']);
  $('dash').innerHTML=html;
