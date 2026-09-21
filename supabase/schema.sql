@@ -110,7 +110,9 @@ as $$
 begin
   insert into public.profiles (id, full_name, phone, role)
   values (new.id, coalesce(new.raw_user_meta_data ->> 'full_name',''),
-          coalesce(new.raw_user_meta_data ->> 'phone',''), 'student')
+          coalesce(new.raw_user_meta_data ->> 'phone',''), 
+          coalesce(new.raw_user_meta_data ->> 'branch',''),
+          coalesce(new.raw_user_meta_data ->> 'instrument',''), 'student')
   on conflict (id) do nothing;
   return new;
 end;
